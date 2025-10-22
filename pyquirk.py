@@ -27,6 +27,8 @@ def get_parser():
                             help='Latex code with only quantikz environment is saved in output file.')
         nextg.add_argument('-m', '--main', nargs=1, 
                             help='A standalone LaTeX document containing the output circuit code.')
+        nextg.add_argument('-t', '--text', nargs=1, 
+                            help='Outputs a text file containing the quantkiz code.')
         return parser
     except argparse.ArgumentParser as err:
         print(str(err))
@@ -182,6 +184,14 @@ def write_output_main(commands, main_file):
     latex_file.write("\\end{quantikz}\n\\end{center}\n\\end{document}")
     latex_file.close()
 
+def write_output_text(commands, out_text_file):
+    """Outputs a text file containing the quantkiz code."""
+    output_text_file = open(out_text_file, "w", encoding="utf-8")
+    output_text_file.write("\\begin{quantikz}\n")
+    output_text_file.write(''.join(commands))
+    output_text_file.write("\\end{quantikz}\n")
+    output_text_file.close()
+
 def convert_json_to_tex(data):
     """Uses all functions defined in this file to convert JSON to TeX codes."""
     vqw_data, subcol = insert_vertical_qw(data)
@@ -212,6 +222,9 @@ def main():
     
     if args.main != None:
         write_output_main(final_sub, args.main[0])
+
+    if args.text != None:
+        write_output_text(final_sub, args.text[0])
 
 if __name__ == "__main__":
     main()
