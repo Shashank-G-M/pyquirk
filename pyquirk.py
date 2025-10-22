@@ -167,7 +167,7 @@ def replace_with_cw(commands):
 
 def write_output_commands(commands, code_file):
     """Outputs only quantikz environment."""
-    quantikz_file = open(code_file, "w")
+    quantikz_file = open(code_file, "w", encoding="utf-8")
     quantikz_file.write("\\begin{quantikz}\n")
     quantikz_file.write(''.join(commands))
     quantikz_file.write("\\end{quantikz}\n")
@@ -175,7 +175,7 @@ def write_output_commands(commands, code_file):
 
 def write_output_main(commands, main_file):
     """Outputs a standalone latex file containing the code."""
-    latex_file = open(main_file, "w")
+    latex_file = open(main_file, "w", encoding="utf-8")
     latex_file.write("\\documentclass{article}\n\\usepackage{tikz}\n\\usetikzlibrary{quantikz}\n\\begin{document}\n\\begin{center}\n\\begin{quantikz}\n"
 )
     latex_file.write(''.join(commands))
