@@ -47,6 +47,19 @@ def json_from_text(text_file):
     data = json.load(tmp)
     return data
 
+def custom_gate_name_2_id(data):
+    "Swaps a custom gate's 'id' with its 'name'."
+    # Build a mapping from id → name
+    id_to_name = {gate["id"]: gate["name"] for gate in data["gates"]}
+
+    # Replace entries in cols
+    for col in data["cols"]:
+        for i, elem in enumerate(col):
+            if isinstance(elem, str) and elem.startswith("~") and elem in id_to_name:
+                col[i] = id_to_name[elem]
+    return data
+
+
 def insert_vertical_qw(data):
     """Inserts vertical quantum wires."""
     special = ["•", "◦"]
@@ -135,7 +148,7 @@ def substitute_gates(data, vqw_ind, subcol, initial_state):
     ## substitutions
     for i in range(NUM_ROWS):
         # leave = ['ctrl', 'targ', 'gate']
-        row = [rules[ele] if ele in rules else ele if "ctrl" in str(ele) else ele if "targ" in str(ele) else ele if "swap" in str(ele) else ''.join(["\\gate{", ele, "}"]) for ele in data['rows'][i]]
+        row = [rules[ele] if ele in rules else ele if "ctrl" in str(ele) else ele if "targ" in str(ele) else ele if "swap" in str(ele) else ''.join(["\\gate{\\mathrm{", ele, "}}"]) for ele in data['rows'][i]]
         comp.append(row)
 
     for i, j in vqw_ind:
@@ -215,6 +228,8 @@ def main():
         url_file = args.url[0]
         data = json_from_URL(url_file)
     
+    data = custom_gate_name_2_id(data)
+
     final_sub = convert_json_to_tex(data)
     
     if args.output != None:
