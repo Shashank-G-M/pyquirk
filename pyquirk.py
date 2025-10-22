@@ -161,11 +161,11 @@ def substitute_gates(data, vqw_ind, subcol, initial_state):
 
     for i in range(NUM_ROWS):
         # \ghost{x} for better vertical spacing and alignment. See section (C). Alignment, P.No. 8 of quantikz manual.
+        row_joined = '  &  '.join(x.strip() for x in comp[i])     # Reduce the spacing between adjacent elements in latex
         if i == NUM_ROWS - 1:
-            commands.append(''.join([initial_state[i], '&', ' & '.join(comp[i]), '& \\ghost{X} \\qw', '\n']))
+            commands.append(''.join([initial_state[i], '&', row_joined, '& \\ghost{X} \\qw', '\n']))
         else:
-            commands.append(
-                ''.join([initial_state[i], '&', ' & '.join(comp[i]), '& \\ghost{X} \\qw ', '\\\\', '\n']))
+            commands.append(''.join([initial_state[i], '&', row_joined, '& \\ghost{X} \\qw', '\\\\', '\n']))
     return commands
 
 def replace_with_cw(commands):
